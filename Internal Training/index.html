@@ -2265,6 +2265,13 @@ body {
 }
 .hb-table tr:last-child td { border-bottom: none; }
 .hb-table tr:hover td { background: var(--bg-subtle); }
+.hb-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 32px;
+  border-radius: var(--radius-sm);
+}
+.hb-table-wrap .hb-table { margin-bottom: 0; min-width: 480px; }
 
 .hb-h2 { font-size: 18px; font-weight: 800; margin: 32px 0 16px; color: var(--text); }
 .hb-h3 { font-size: 15px; font-weight: 700; margin: 24px 0 12px; color: var(--text); }
@@ -2428,6 +2435,42 @@ body {
   .modal-body {
     padding: 20px 24px 24px;
   }
+}
+
+/* Mid-size phones / large phones — tighten section gutters before full mobile */
+@media (max-width: 600px) {
+  .section {
+    padding: 80px 16px 40px;
+  }
+  .hb-section-body { max-width: 100%; }
+  .hb-lead { font-size: 15px; }
+  .dash-progress-card { padding: 20px 18px; }
+  .dash-chapter-grid { grid-template-columns: 1fr; }
+  .hb-stat-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+}
+
+/* Small phones — keep the quiz toast inside the viewport */
+@media (max-width: 480px) {
+  .quiz-toast {
+    left: 12px;
+    right: 12px;
+    bottom: 16px;
+    transform: translateY(140px);
+    min-width: 0;
+    max-width: none;
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+  .quiz-toast.show { transform: translateY(0); }
+  .quiz-toast-body { flex: 1 1 100%; order: 1; }
+  .quiz-toast-icon { order: 0; }
+  .quiz-toast-actions {
+    flex: 1 1 100%;
+    order: 2;
+    margin-top: 4px;
+  }
+  .quiz-toast-actions button { flex: 1; }
+  .quiz-toast-close { position: absolute; top: 10px; right: 10px; }
 }
 </style>
 </head>
@@ -4432,8 +4475,8 @@ function updateProgressUI() {
   const total = ALL_SECTIONS.length;
   const pct   = Math.round((count / total) * 100);
 
-  // Global top bar
-  document.getElementById('global-progress-fill').style.width = pct + '%';
+  // Global top bar — pixel-based (driven by scroll depth), not the discrete count
+  updateGlobalProgressBar();
 
   // Sidebar summary
   document.getElementById('sidebarProgressFill').style.width = pct + '%';
@@ -4590,20 +4633,66 @@ function toggleChapter(id) {
 }
 
 /* ============================================
-   READ TRACKING — IntersectionObserver
-   ============================================ */
-function setupReadTracking() {
-  // The window (body) is the scroll container — NOT .main-content (which has no
-  // overflow/height constraint). So the observer root must be the viewport (null);
-  // using .main-content as root would report every sentinel as intersecting the
-  // moment its section is displayed, marking sections read without scrolling.
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) markSectionRead(entry.target.dataset.section);
-    });
-  }, { root: null, threshold: 0.9 });
+   READ TRACKING — pixel-based scroll depth
+   ============================================
+   The window (body) is the scroll container — NOT .main-content (which has no
+   overflow/height constraint). We measure how far the BOTTOM of the viewport has
+   travelled through the active section and turn that into a 0–1 fraction. The global
+   progress bar fills continuously as the user scrolls; a section is marked "read"
+   once 90% of it has passed the viewport bottom (or it fits entirely on screen).
+   readSections still drives quiz unlock, chapter badges, dashboard cards, etc. */
+let sectionFractions = {};   // sectionId -> furthest fraction reached this session
+let _scrollRaf = null;
 
-  document.querySelectorAll('.read-sentinel').forEach(el => observer.observe(el));
+function currentSectionId() {
+  const active = document.querySelector('.section.active');
+  return active ? active.id.replace('section-', '') : null;
+}
+
+function computeSectionFraction(active) {
+  const rect = active.getBoundingClientRect();
+  const sectionTop = rect.top + window.scrollY;
+  const sectionHeight = active.offsetHeight || 1;
+  const viewportBottom = window.scrollY + window.innerHeight;
+  const frac = (viewportBottom - sectionTop) / sectionHeight;
+  return Math.max(0, Math.min(1, frac));
+}
+
+function updateGlobalProgressBar() {
+  const total = ALL_SECTIONS.length;
+  let progressed = readSections.size;
+  const id = currentSectionId();
+  if (id && ALL_SECTIONS.includes(id) && !readSections.has(id)) {
+    progressed += (sectionFractions[id] || 0);   // fractional credit for the section in view
+  }
+  const pct = Math.min(100, (progressed / total) * 100);
+  const fill = document.getElementById('global-progress-fill');
+  if (fill) fill.style.width = pct + '%';
+}
+
+function onScrollProgress() {
+  const active = document.querySelector('.section.active');
+  if (active) {
+    const id = active.id.replace('section-', '');
+    if (ALL_SECTIONS.includes(id)) {
+      const frac = computeSectionFraction(active);
+      if (frac > (sectionFractions[id] || 0)) sectionFractions[id] = frac;   // monotonic
+      if (sectionFractions[id] >= 0.9 && !readSections.has(id)) {
+        markSectionRead(id);   // refreshes the rest of the progress UI
+      }
+    }
+  }
+  updateGlobalProgressBar();
+}
+
+function setupReadTracking() {
+  window.addEventListener('scroll', () => {
+    if (_scrollRaf) return;
+    _scrollRaf = requestAnimationFrame(() => { _scrollRaf = null; onScrollProgress(); });
+  }, { passive: true });
+  window.addEventListener('resize', () => onScrollProgress(), { passive: true });
+  // Evaluate once for whatever section is shown on load (handles short sections).
+  onScrollProgress();
 }
 
 /* ============================================
@@ -4730,10 +4819,14 @@ function navigateTo(sectionId) {
   if (ch) openChapterById(ch);
 
   // The window is the scroll container — reset it to the top of the new section.
-  // (Also prevents a short new section's bottom sentinel from being in view on arrival.)
   window.scrollTo(0, 0);
 
   closeMobileSidebar();
+
+  // Recompute scroll-depth progress for the section now in view. A section that fits
+  // entirely on screen reaches fraction 1 immediately and is marked read. Deferred to
+  // the next frame so layout reflects the just-shown section before we measure it.
+  requestAnimationFrame(onScrollProgress);
 }
 
 function chapterOf(sectionId) {
@@ -4782,6 +4875,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (nav)   nav.classList.add('open');
       if (arrow) arrow.classList.add('open');
     }
+  });
+
+  // Wrap wide tables in a horizontal scroll container (mobile overflow guard)
+  document.querySelectorAll('.hb-table').forEach(table => {
+    if (table.parentElement && table.parentElement.classList.contains('hb-table-wrap')) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'hb-table-wrap';
+    table.parentNode.insertBefore(wrap, table);
+    wrap.appendChild(table);
   });
 
   // Sync all progress UI
