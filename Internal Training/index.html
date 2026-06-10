@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PHX INDIA — Internal Training Portal</title>
 <meta name="description" content="Internal training portal for PHX INDIA Imaging Services LLP employees. Learn the service lifecycle, team roles, policies, and company standards.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+<meta name="theme-color" content="#0A0A0A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -60,6 +64,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -71,12 +77,16 @@ body {
   overflow-x: hidden;
 }
 
+/* Media never overflows its container on any screen */
+img, svg, iframe, video, canvas { max-width: 100%; }
+
 /* ============================================
    LAYOUT
    ============================================ */
 .app-layout {
   display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ============================================
@@ -111,6 +121,18 @@ body {
 
 .logo-badge {
   flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.12);
+}
+.logo-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .logo-text {
@@ -305,18 +327,57 @@ body {
 .main-content {
   margin-left: var(--sidebar-width);
   flex: 1;
+  min-width: 0;            /* allow flex child to shrink so wide tables/grids don't force overflow */
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .section {
   display: none;
   padding: 48px 56px 64px;
   max-width: 1200px;
+  margin: 0 auto;          /* center the reading column on ultrawide screens */
   animation: fadeIn 0.35s ease;
 }
 
 .section.active {
   display: block;
+}
+
+/* End-of-section "Next" navigation (injected into each content section) */
+.section-footer-nav {
+  margin-top: 44px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+.next-section-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--crm);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 13px 14px 13px 22px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  text-align: left;
+  transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.next-section-btn:hover { opacity: 0.94; transform: translateX(2px); box-shadow: var(--shadow-md); }
+.next-section-btn .nsb-text { display: flex; flex-direction: column; line-height: 1.3; }
+.next-section-btn .nsb-kicker {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; opacity: 0.72;
+}
+.next-section-btn .nsb-title { font-size: 15px; font-weight: 700; }
+.next-section-btn .nsb-arrow {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
 }
 
 @keyframes fadeIn {
@@ -1914,8 +1975,15 @@ body {
    RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
+  /* Narrower sidebar on tablets — cascades to .sidebar width and .main-content margin */
+  :root { --sidebar-width: 240px; }
+
   .section {
     padding: 36px 32px 48px;
+  }
+
+  .dashboard-hero {
+    padding: 40px 36px;
   }
 
   .phase-overview {
@@ -1982,6 +2050,18 @@ body {
   max-width: 1200px;
 }
 
+.portal-footer-brandblock {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.portal-footer-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: block;
+}
 .portal-footer-left {
   display: flex;
   flex-direction: column;
@@ -2426,6 +2506,7 @@ body {
 
   .modal {
     margin: 16px;
+    max-height: 88vh;
   }
 
   .modal-header {
@@ -2435,6 +2516,21 @@ body {
   .modal-body {
     padding: 20px 24px 24px;
   }
+
+  /* Comfortable tap targets in the sidebar (>=44px high) */
+  .sidebar-home-item { padding: 12px 12px; }
+  .chapter-btn { padding: 13px 16px; }
+  .chapter-nav .nav-item { padding: 12px 12px 12px 34px; font-size: 14px; }
+  .nav-item { padding: 13px 16px; }
+
+  /* Handbook PDF viewer + action buttons */
+  .pdf-viewer { height: 70vh; min-height: 420px; }
+  .pdf-actions { gap: 10px; }
+  .pdf-actions a { flex: 1; justify-content: center; }
+
+  /* Quiz result actions stack and go full width for easy tapping */
+  .quiz-results .btn { width: 100%; justify-content: center; margin: 6px 0 0; }
+  .quiz-score-circle { width: 120px; height: 120px; }
 }
 
 /* Mid-size phones / large phones — tighten section gutters before full mobile */
@@ -2447,6 +2543,8 @@ body {
   .dash-progress-card { padding: 20px 18px; }
   .dash-chapter-grid { grid-template-columns: 1fr; }
   .hb-stat-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .section-footer-nav { justify-content: stretch; }
+  .next-section-btn { width: 100%; justify-content: space-between; }
 }
 
 /* Small phones — keep the quiz toast inside the viewport */
@@ -2471,6 +2569,26 @@ body {
   }
   .quiz-toast-actions button { flex: 1; }
   .quiz-toast-close { position: absolute; top: 10px; right: 10px; }
+
+  /* Tighter gutters + scaled type on small phones */
+  .section { padding: 74px 14px 36px; }
+  .dashboard-hero { padding: 28px 20px; border-radius: var(--radius-md); margin-bottom: 28px; }
+  .dashboard-hero h1 { font-size: 21px; }
+  .section-header h1 { font-size: 20px; }
+  .section-header p { font-size: 13px; }
+  .hb-h2 { font-size: 16px; }
+  .hb-stat-value { font-size: 24px; }
+  .hb-card-grid, .hb-division-grid { grid-template-columns: 1fr; }
+  .hb-stat-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Quiz + PDF on small phones */
+  .quiz-question-card { padding: 20px 18px; }
+  .quiz-score-circle { width: 108px; height: 108px; border-width: 3px; }
+  .quiz-score-number { font-size: 28px; }
+  .pdf-viewer { height: 64vh; min-height: 320px; }
+  .pdf-actions { flex-direction: column; }
+  .pdf-actions a { width: 100%; }
+  .btn-start-quiz { width: 100%; justify-content: center; }
 }
 
 /* ============================================
@@ -2486,10 +2604,10 @@ body {
   display: flex; flex-direction: column; gap: 6px;
 }
 .quiz-identity input {
-  font-family: inherit; font-size: 14px; font-weight: 500;
+  font-family: inherit; font-size: 16px; font-weight: 500;   /* 16px avoids iOS zoom-on-focus */
   padding: 11px 13px; border: 1px solid var(--border);
   border-radius: var(--radius-sm); background: var(--bg); color: var(--text);
-  text-transform: none; letter-spacing: normal;
+  text-transform: none; letter-spacing: normal; width: 100%;
 }
 .quiz-identity input:focus {
   outline: none; border-color: var(--crm); box-shadow: 0 0 0 3px rgba(192,0,106,0.12);
@@ -2567,13 +2685,7 @@ body {
     <div class="sidebar-header">
       <div class="logo-container">
         <div class="logo-badge">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="24" cy="24" r="23" fill="#0A0A0A" stroke="#FFFFFF" stroke-width="1.5"/>
-            <path d="M14 15L22 24L14 33" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M34 15L26 24L34 33" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="18" y1="24" x2="30" y2="24" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
-            <text x="24" y="44" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="4.5" font-weight="700" letter-spacing="1.2">PHX INDIA</text>
-          </svg>
+          <img src="assets/phx-badge.png" alt="PHX India logo" width="48" height="48">
         </div>
         <div class="logo-text">
           <div class="brand-name">PHX India</div>
@@ -4272,9 +4384,12 @@ body {
     <!-- Footer -->
     <footer class="portal-footer">
       <div class="portal-footer-inner">
-        <div class="portal-footer-left">
-          <span class="portal-footer-brand">PHX INDIA Imaging Services LLP</span>
-          <span class="portal-footer-doc">Internal Training Portal · For Employee Use Only</span>
+        <div class="portal-footer-brandblock">
+          <img class="portal-footer-logo" src="assets/phx-mark-black.png" alt="PHX India logo" width="46" height="46">
+          <div class="portal-footer-left">
+            <span class="portal-footer-brand">PHX INDIA Imaging Services LLP</span>
+            <span class="portal-footer-doc">Internal Training Portal · For Employee Use Only</span>
+          </div>
         </div>
         <div class="portal-footer-right">
           <span class="portal-footer-version">Stage 1 · June 2026</span>
@@ -5046,6 +5161,9 @@ function navigateTo(sectionId) {
   const ch = chapterOf(sectionId);
   if (ch) openChapterById(ch);
 
+  // Point this section's end-of-page button at the current next-unread target.
+  refreshNextButton(sectionId);
+
   // The window is the scroll container — reset it to the top of the new section.
   window.scrollTo(0, 0);
 
@@ -5086,6 +5204,65 @@ function continueReading() {
 }
 
 /* ============================================
+   NEXT-SECTION NAVIGATION (end-of-page button)
+   ============================================ */
+function sectionTitle(id) {
+  const h = document.querySelector('#section-' + id + ' .section-header h1');
+  return h ? h.textContent.trim() : 'Continue';
+}
+
+// Next UNREAD section after `fromId` in reading order; wraps around; null if none remain.
+function nextUnreadSection(fromId) {
+  const idx = ALL_SECTIONS.indexOf(fromId);
+  for (let i = idx + 1; i < ALL_SECTIONS.length; i++) {
+    if (!readSections.has(ALL_SECTIONS[i])) return ALL_SECTIONS[i];
+  }
+  for (let i = 0; i < Math.max(idx, 0); i++) {
+    if (!readSections.has(ALL_SECTIONS[i])) return ALL_SECTIONS[i];
+  }
+  return null;
+}
+
+function goToNextSection(fromId) {
+  const next = nextUnreadSection(fromId);
+  navigateTo(next || 'quiz');
+}
+
+// Point the active section's button at the current next-unread target.
+function refreshNextButton(fromId) {
+  const titleEl  = document.getElementById('nsbTitle-' + fromId);
+  if (!titleEl) return;
+  const kickerEl = document.getElementById('nsbKicker-' + fromId);
+  const next = nextUnreadSection(fromId);
+  if (next) {
+    if (kickerEl) kickerEl.textContent = 'Up next';
+    titleEl.textContent = sectionTitle(next);
+  } else {
+    if (kickerEl) kickerEl.textContent = 'All sections read';
+    titleEl.textContent = 'Take the Knowledge Test';
+  }
+}
+
+// Append a "Next section" button to the end of every content section.
+function injectNextButtons() {
+  ALL_SECTIONS.forEach(id => {
+    const sec = document.getElementById('section-' + id);
+    if (!sec || sec.querySelector('.section-footer-nav')) return;
+    const nav = document.createElement('div');
+    nav.className = 'section-footer-nav';
+    nav.innerHTML =
+      '<button class="next-section-btn" onclick="goToNextSection(\'' + id + '\')">' +
+        '<span class="nsb-text">' +
+          '<span class="nsb-kicker" id="nsbKicker-' + id + '">Up next</span>' +
+          '<span class="nsb-title" id="nsbTitle-' + id + '">Continue</span>' +
+        '</span>' +
+        '<span class="nsb-arrow"><i class="fa-solid fa-arrow-right"></i></span>' +
+      '</button>';
+    sec.appendChild(nav);
+  });
+}
+
+/* ============================================
    INIT
    ============================================ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -5113,6 +5290,9 @@ document.addEventListener('DOMContentLoaded', () => {
     table.parentNode.insertBefore(wrap, table);
     wrap.appendChild(table);
   });
+
+  // Add the "Next section" button to the end of every content section
+  injectNextButtons();
 
   // Pre-fill the quiz identity fields if a candidate is remembered on this device
   if (quizTaker) {
