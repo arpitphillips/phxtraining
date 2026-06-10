@@ -2472,6 +2472,66 @@ body {
   .quiz-toast-actions button { flex: 1; }
   .quiz-toast-close { position: absolute; top: 10px; right: 10px; }
 }
+
+/* ============================================
+   QUIZ IDENTITY FORM
+   ============================================ */
+.quiz-identity {
+  width: 100%; max-width: 380px; margin: 0 0 24px;
+  text-align: left; display: flex; flex-direction: column; gap: 14px;
+}
+.quiz-identity label {
+  font-size: 12px; font-weight: 700; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.4px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.quiz-identity input {
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  padding: 11px 13px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--bg); color: var(--text);
+  text-transform: none; letter-spacing: normal;
+}
+.quiz-identity input:focus {
+  outline: none; border-color: var(--crm); box-shadow: 0 0 0 3px rgba(192,0,106,0.12);
+}
+.quiz-identity input.invalid { border-color: var(--danger); background: #fef2f2; }
+.quiz-identity-error { font-size: 12.5px; color: var(--danger); font-weight: 600; }
+.quiz-candidate {
+  font-size: 13px; color: var(--text-secondary); margin: -4px 0 18px;
+  background: var(--bg-subtle); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px; line-height: 1.5;
+}
+.quiz-candidate strong { color: var(--text); font-weight: 700; }
+
+/* ============================================
+   HANDBOOK PDF VIEWER
+   ============================================ */
+.pdf-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.btn-outline-link {
+  display: inline-flex; align-items: center; font-size: 15px; font-weight: 700;
+  font-family: inherit; cursor: pointer; text-decoration: none;
+  padding: 13px 24px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); color: var(--text); background: var(--bg);
+  transition: background var(--transition), border-color var(--transition);
+}
+.btn-outline-link:hover { background: var(--bg-subtle); border-color: var(--text-muted); }
+.pdf-viewer {
+  width: 100%; height: 80vh; min-height: 480px;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  overflow: hidden; background: var(--bg-subtle);
+}
+.pdf-viewer iframe, .pdf-viewer embed { width: 100%; height: 100%; border: 0; display: block; }
+
+/* ============================================
+   SUPPLEMENTARY (NON-HANDBOOK) REFERENCE MARKER
+   ============================================ */
+.supplementary-note {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
+  border-radius: var(--radius-md); padding: 11px 15px; margin-bottom: 22px;
+  font-size: 12.5px; font-weight: 600; line-height: 1.5;
+}
+.supplementary-note i { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -2645,12 +2705,12 @@ body {
         </div>
       </div>
 
-      <!-- Chapter 6: Operations -->
+      <!-- Chapter 6: Operations (supplementary — sourced from the Process Document, not the handbook) -->
       <div class="chapter-group">
         <button class="chapter-btn" onclick="toggleChapter('operations')">
           <div class="chapter-btn-left">
             <span class="chapter-dot" style="background:var(--studios)"></span>
-            <span>Operations</span>
+            <span>Operations <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-muted);border:1px solid var(--border);padding:1px 5px;border-radius:4px;margin-left:4px;">Ref</span></span>
           </div>
           <div class="chapter-btn-right">
             <span class="chapter-badge" id="chapterBadge-operations">0/4</span>
@@ -2666,6 +2726,12 @@ body {
         </div>
       </div>
 
+    </div>
+
+    <!-- Handbook PDF link -->
+    <div class="sidebar-home-item" id="nav-handbook-pdf" data-section="handbook-pdf" onclick="navigateTo('handbook-pdf')">
+      <i class="fa-solid fa-file-pdf"></i>
+      <span>Handbook PDF</span>
     </div>
 
     <!-- Quiz button -->
@@ -2739,7 +2805,7 @@ body {
         </div>
         <div class="dash-chapter-card" onclick="navigateToChapter('operations')" style="--ch:var(--studios)">
           <div class="dash-chapter-head"><span class="dash-chapter-dot"></span><h3>Operations</h3></div>
-          <p>The 12-stage service lifecycle, team roles, dos &amp; don'ts, and policies.</p>
+          <p>The 12-stage service lifecycle, team roles, dos &amp; don'ts, and policies. <em>Supplementary process reference — not part of the handbook.</em></p>
           <div class="dash-chapter-foot"><span id="dashCount-operations">0 / 4</span><div class="dash-chapter-bar"><div class="dash-chapter-fill" id="dashFill-operations"></div></div></div>
         </div>
       </div>
@@ -2759,6 +2825,10 @@ body {
           <i class="fa-solid fa-phone"></i>
           <span>Contact &amp; Escalation</span>
         </a>
+        <a class="quick-nav-item" href="#" onclick="navigateTo('handbook-pdf'); return false;">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span>Handbook PDF</span>
+        </a>
         <a class="quick-nav-item" href="#" onclick="navigateTo('quiz'); return false;">
           <i class="fa-solid fa-brain"></i>
           <span>Knowledge Test</span>
@@ -2776,25 +2846,25 @@ body {
         <p>The story, structure, and identity of PHX India — your employer and the organisation you now represent.</p>
       </div>
       <div class="hb-section-body">
-        <p class="hb-lead">PHX India Imaging Services LLP is a professional imaging company founded by Sebastian Zachariah. Built over two decades in the industry, PHX India has grown into a full-service imaging organisation operating across four specialist divisions, each dedicated to a distinct facet of visual production.</p>
+        <p class="hb-lead">We are PHX India — a multi-faceted visual documentation and communications firm that speaks the language of aesthetics and quality with service standards to match. PHX India was born out of an idea our founder and mentor Sebastian Zachariah started over 20 years ago: a studio specialising in interior architecture photography. Today it is a reputed name providing high-quality visuals to the interior, architecture, real estate and hospitality industries, operating across four specialist divisions.</p>
 
         <h2 class="hb-h2">Our Four Divisions</h2>
         <div class="hb-division-grid">
           <div class="hb-division-card" style="border-top:3px solid var(--crm)">
             <h4>Photographix India</h4>
-            <p>Professional photography — product, lifestyle, portrait, commercial, and architectural.</p>
+            <p>Photography.</p>
           </div>
           <div class="hb-division-card" style="border-top:3px solid var(--production)">
             <h4>Motiongraphix India</h4>
-            <p>Video production and motion content — brand films, reels, event coverage, and campaigns.</p>
+            <p>Motion &amp; video.</p>
           </div>
           <div class="hb-division-card" style="border-top:3px solid #7c3aed">
             <h4>Stylefix India</h4>
-            <p>Wardrobe and lifestyle styling — personal, editorial, and commercial styling services.</p>
+            <p>Styling.</p>
           </div>
           <div class="hb-division-card" style="border-top:3px solid #d97706">
             <h4>Studio Phix</h4>
-            <p>Post-production editing — image retouching, colour grading, and digital finishing.</p>
+            <p>Studio &amp; post-production.</p>
           </div>
         </div>
 
@@ -2828,31 +2898,41 @@ body {
         <div class="hb-card-grid">
           <div class="hb-card">
             <div class="hb-card-icon" style="background:rgba(192,0,106,0.08);color:var(--crm)"><i class="fa-solid fa-medal"></i></div>
-            <h4>Quality First</h4>
-            <p>Every deliverable must meet the highest possible standard. There is no acceptable reason to deliver substandard work.</p>
+            <h4>Quality &amp; Commitment</h4>
+            <p>We are what we do. Good quality and commitment are the foundation of our very being — built on sound governance and best practices, within legal limits.</p>
           </div>
           <div class="hb-card">
             <div class="hb-card-icon" style="background:rgba(0,122,122,0.08);color:var(--production)"><i class="fa-solid fa-handshake"></i></div>
-            <h4>Integrity Always</h4>
-            <p>Be honest with clients, with colleagues, and with the firm. Do not overpromise. Do not conceal problems.</p>
+            <h4>Honesty</h4>
+            <p>We believe honesty is the best policy, and we hold it as a core practice in everything we do.</p>
           </div>
           <div class="hb-card">
-            <div class="hb-card-icon" style="background:rgba(124,58,237,0.08);color:#7c3aed"><i class="fa-solid fa-user-tie"></i></div>
-            <h4>Professionalism</h4>
-            <p>Conduct yourself with dignity, punctuality, and respect in every situation — internally and externally.</p>
+            <div class="hb-card-icon" style="background:rgba(124,58,237,0.08);color:#7c3aed"><i class="fa-solid fa-arrows-rotate"></i></div>
+            <h4>Learning &amp; Relearning</h4>
+            <p>Everything can be bettered; the scope of improvement is intrinsic to all things. We evolve, define, and redefine ourselves and our services for as long as we exist.</p>
           </div>
           <div class="hb-card">
-            <div class="hb-card-icon" style="background:rgba(217,119,6,0.08);color:#d97706"><i class="fa-solid fa-lightbulb"></i></div>
-            <h4>Continuous Improvement</h4>
-            <p>We seek to improve with every project. Feedback is welcomed. Stagnation is not acceptable.</p>
+            <div class="hb-card-icon" style="background:rgba(217,119,6,0.08);color:#d97706"><i class="fa-solid fa-heart"></i></div>
+            <h4>Customer Loyalty</h4>
+            <p>Loyal customers make sound business sense. We build loyalty by delivering what we promise, listening more than we speak, and being courteous at all times.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(192,0,106,0.08);color:var(--crm)"><i class="fa-solid fa-people-group"></i></div>
+            <h4>Our People Are Our Asset</h4>
+            <p>An effective system is nothing but people who deliver. Our associates and employees are our asset and are treated as such. We remain a human firm and keep our people with us.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(0,122,122,0.08);color:var(--production)"><i class="fa-solid fa-gears"></i></div>
+            <h4>Good Systems &amp; Efficiency</h4>
+            <p>We profit from good systems and the efficiency of those systems, and we follow them for the benefit of the entire team and the business at large.</p>
           </div>
         </div>
 
         <div class="hb-info-box amber">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <div class="hb-info-box-body">
-            <strong>These values govern your daily decisions</strong>
-            If you are uncertain about a course of action, ask yourself whether it reflects quality, integrity, and professionalism. If the answer is no — do not proceed without consulting your manager.
+            <strong>Whatever we do must finally benefit our customer</strong>
+            Every improvement we make should result in a better product, a better service, or a better experience of dealing with our firm. If a course of action does not reflect these beliefs, do not proceed without consulting your manager.
           </div>
         </div>
       </div>
@@ -2866,22 +2946,58 @@ body {
         <p>How PHX India approaches its work, its clients, and its people.</p>
       </div>
       <div class="hb-section-body">
-        <p class="hb-lead">PHX India does not compete on price. We compete on the quality and consistency of our output, and on the trust we build with every client relationship. Our philosophy is simple: relentless standards, every time, without exception.</p>
+        <p class="hb-lead">Our philosophy is what guides us beyond the rules. It describes the spirit in which we work, learn, and treat the people and ideas around us. These are the values Team PHX India lives by.</p>
 
-        <h2 class="hb-h2">How We Work</h2>
-        <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-circle-dot"></i><span>Clients receive one point of contact — the CRM Team. All other teams work behind this interface, never around it.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Every project follows the same 12-stage lifecycle. There are no shortcuts. Skipping a stage creates risk — and the person who skipped it is accountable.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Problems are escalated immediately, not managed privately. An undisclosed problem is worse than the problem itself.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Client feedback — including CSS Feedback — is mandatory. It is how we measure ourselves and improve.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Every employee is a representative of the firm. How you behave on-site, online, and in conversation reflects PHX India.</span></li>
-        </ul>
-
-        <div class="hb-info-box green">
-          <i class="fa-solid fa-circle-check"></i>
-          <div class="hb-info-box-body">
-            <strong>The PHX India Standard</strong>
-            If it is worth doing, it is worth doing properly. This is not a slogan — it is an operational requirement. Hold yourself and your colleagues to this standard every day.
+        <div class="hb-card-grid">
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(192,0,106,0.08);color:var(--crm)"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h4>We Stay Curious</h4>
+            <p>Curiosity and a thirst for knowledge are profound human values. We encourage questions, even when they don't lead to immediate answers.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(0,122,122,0.08);color:var(--production)"><i class="fa-solid fa-lightbulb"></i></div>
+            <h4>We Share Ideas &amp; Build Knowledge</h4>
+            <p>Good things start with people sharing ideas. When ideas become knowledge, they can change the world. We provide a platform for that to happen.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(124,58,237,0.08);color:#7c3aed"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <h4>We Encourage Aesthetics</h4>
+            <p>Whatever can be done should be done aesthetically — stylish as well as functional. We help clients express themselves beautifully.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(217,119,6,0.08);color:#d97706"><i class="fa-solid fa-feather"></i></div>
+            <h4>We Prefer Simple Things</h4>
+            <p>Simplicity is hard to achieve, but it makes everything easier. We stay focused and transparent, avoiding unnecessary complexity.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(192,0,106,0.08);color:var(--crm)"><i class="fa-solid fa-ear-listen"></i></div>
+            <h4>We Listen</h4>
+            <p>Really listening is harder than it seems. We believe we have the most to learn from our clients, and we value our dialogue with them.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(0,122,122,0.08);color:var(--production)"><i class="fa-solid fa-earth-asia"></i></div>
+            <h4>We Engage With Our Surroundings</h4>
+            <p>We care about the big picture and what's close to us. We take the side of the disadvantaged and involve ourselves in charity and skill development.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(124,58,237,0.08);color:#7c3aed"><i class="fa-solid fa-flag-checkered"></i></div>
+            <h4>We Get It Done</h4>
+            <p>We break big dreams into deliverable steps. We compete vigorously but always lawfully and ethically. Our success depends on trust earned every day.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(217,119,6,0.08);color:#d97706"><i class="fa-solid fa-heart-circle-check"></i></div>
+            <h4>We're Honest, We Learn From Mistakes</h4>
+            <p>We create an environment where people dare to make and admit mistakes. We avoid blame and openly discuss everything — including our weaknesses.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(192,0,106,0.08);color:var(--crm)"><i class="fa-solid fa-palette"></i></div>
+            <h4>We Admire Art, Music &amp; Good Food</h4>
+            <p>We are diverse and eager to learn about each other's interests. We value self-expression and never tire of learning about each other and the world.</p>
+          </div>
+          <div class="hb-card">
+            <div class="hb-card-icon" style="background:rgba(0,122,122,0.08);color:var(--production)"><i class="fa-solid fa-handshake-simple"></i></div>
+            <h4>We Keep Our Promises</h4>
+            <p>We honour our promises and do what is right, not just what is easy. When we make a commitment, we do our utmost to deliver on it.</p>
           </div>
         </div>
       </div>
@@ -2895,22 +3011,23 @@ body {
         <p>The ethical principles every PHX India employee must uphold — without exception.</p>
       </div>
       <div class="hb-section-body">
-        <p class="hb-lead">PHX India's reputation depends entirely on the conduct of its people. The following principles are non-negotiable. Any breach is treated seriously and may result in disciplinary action or termination.</p>
+        <p class="hb-lead">PHX India is built on a set of foundational ethical principles. A code of ethics gives a general idea of what behaviour is acceptable and encouraged. These are the principles on which the firm is based — every employee is expected to comply with them as part of their employment duties.</p>
 
-        <h2 class="hb-h2">Core Principles</h2>
+        <h2 class="hb-h2">Our Foundational Principles</h2>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-shield-halved"></i><span><strong>Confidentiality.</strong> Client information, project details, and firm data are strictly confidential. Do not share them externally — not verbally, not digitally, not on social media.</span></li>
-          <li><i class="fa-solid fa-shield-halved"></i><span><strong>Honesty.</strong> Do not misrepresent your work, your attendance, your expenses, or your conduct. Dishonesty — even once — breaks trust permanently.</span></li>
-          <li><i class="fa-solid fa-shield-halved"></i><span><strong>Respect.</strong> Treat every colleague, client, and vendor with respect regardless of their role or seniority. Harassment, discrimination, and intimidation are grounds for immediate dismissal.</span></li>
-          <li><i class="fa-solid fa-shield-halved"></i><span><strong>No conflicts of interest.</strong> Do not take on work, clients, or business arrangements that compete with or compromise PHX India. Disclose any potential conflict immediately.</span></li>
-          <li><i class="fa-solid fa-shield-halved"></i><span><strong>Report violations.</strong> If you witness behaviour that violates these principles, you have an obligation to report it. Silence is complicity.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span><strong>We shall do no Evil.</strong> In all its interpretations, we shall never participate in or support anything that is intrinsically evil to humanity.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span><strong>We shall be transparent &amp; ethical in our dealings</strong> — be it within or outside the team.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span><strong>We shall strive for knowledge and improvement at all times.</strong> We are what we know.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span><strong>We shall act and conduct ourselves as professionals at all times.</strong> We deliver on our promises or we don't make a promise at all. We can be trusted and we know our job.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span><strong>We promise to 'belong' to the team and act as one.</strong> We look out for the team at all times, never put them in trouble, and always contribute to their well-being.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span><strong>We find strength in diversity.</strong> Different people bring different perspectives — valuable for solving problems and generating new ideas.</span></li>
         </ul>
 
-        <div class="hb-info-box red">
+        <div class="hb-info-box amber">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <div class="hb-info-box-body">
-            <strong>Zero Tolerance</strong>
-            Theft, harassment, falsification of records, and sharing confidential client data without authorisation are zero-tolerance violations. They result in immediate dismissal without notice.
+            <strong>Complying with the Code is a condition of employment</strong>
+            No set of rules can cover every circumstance. Where these principles meet a situation they don't explicitly address, use good judgement — and where local law is contrary, the law prevails. Every employee is expected to comply with the Code as part of their employment duties.
           </div>
         </div>
       </div>
@@ -2935,7 +3052,7 @@ body {
           <li><i class="fa-solid fa-check"></i><span>Arrive on time. Punctuality is a basic professional standard, not a courtesy.</span></li>
           <li><i class="fa-solid fa-check"></i><span>Mark attendance accurately. Do not ask others to mark attendance on your behalf.</span></li>
           <li><i class="fa-solid fa-check"></i><span>Keep your workspace clean and organised. Shared spaces must be left as you found them.</span></li>
-          <li><i class="fa-solid fa-check"></i><span>Dress appropriately for the work environment and any client-facing occasions.</span></li>
+          <li><i class="fa-solid fa-check"></i><span>You may be asked to go on duty with any division (Photographix, Motiongraphix, Stylefix) when needed — please comply.</span></li>
           <li><i class="fa-solid fa-check"></i><span>Use respectful language at all times. Profanity and aggressive communication are not acceptable.</span></li>
           <li><i class="fa-solid fa-check"></i><span>Personal grievances between colleagues must be addressed privately and escalated through the proper channel if unresolved — not aired publicly or in group chats.</span></li>
         </ul>
@@ -2958,29 +3075,36 @@ body {
         <p>Standards for client interactions, communication, and representation of PHX India externally.</p>
       </div>
       <div class="hb-section-body">
-        <p class="hb-lead">The way PHX India is perceived externally is entirely shaped by the conduct of its people. Every client interaction — however brief — either builds or erodes trust. These standards are not optional.</p>
+        <p class="hb-lead">While on assignment, we put forward our very best and maintain the protocol already in place — refer to each team's Standard Operating Procedures (SOP). The Team Leader (Photographer, Producer, Stylist, etc.) takes the final call in all matters related to the assignment, and you act in accordance with those decisions.</p>
 
-        <h2 class="hb-h2">Client Communication</h2>
+        <h2 class="hb-h2">Dressing &amp; Punctuality</h2>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-circle-dot"></i><span>Only the CRM Team communicates directly with clients. Production and Studios must not contact clients independently unless explicitly authorised.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>All communication must be accurate, timely, and professional in tone. Casual or ambiguous communication leads to misunderstandings that damage client relationships.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Never make commitments or promises to a client that you are not authorised to make. If in doubt, say "I will confirm and get back to you" — then do so promptly.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Do not discuss pricing, scope changes, or complaints on behalf of the firm without CRM involvement.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Smart casuals or semi-formals are acceptable while on duty. Do not wear clothes that might offend the client or home-owner where you are on assignment.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Always arrive before reporting time — the call-sheet time is when the shoot starts, so account for travel time. As a rule, PHX India does not like to be late.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Your style statement does not get us more assignments — your smartness and decency does.</span></li>
         </ul>
 
-        <h2 class="hb-h2">On-Location Conduct</h2>
+        <h2 class="hb-h2">Equipment &amp; Interaction With the Team</h2>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-circle-dot"></i><span>Arrive prepared. Review the brief fully before leaving the office.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Be respectful of the client's property, staff, and guests.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Do not photograph, film, or share images from a client's location without explicit permission.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>If issues arise on location that were not in the brief, contact CRM immediately — do not improvise solutions with the client.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>The equipment entrusted to you is your responsibility. On outstation assignments it is high priority — your personal belongings are an add-on. Keep gear cleaned and charged the previous day; never leave it to the last minute.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Always be respectful and courteous to your team members. The Team Leader or Shoot-in-Charge leads the shoot; follow their instructions.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>If you disagree, talk to the Team Leader privately — never argue in front of the client. Keep personal problems outside the shoot.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Stay with the team and the equipment. Do not wander into others' personal or private spaces during shoots.</span></li>
         </ul>
 
-        <div class="hb-info-box blue">
-          <i class="fa-solid fa-circle-info"></i>
+        <h2 class="hb-h2">Interaction With the Client</h2>
+        <ul class="hb-rule-list">
+          <li><i class="fa-solid fa-circle-dot"></i><span>Introduce yourself to the client and their team. Be polite and courteous.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Remember you are there on a JOB — not to critique anyone's work. Do not comment on the client's design; they are not paying for your opinion.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>If a client asks something you are unsure about, direct them to the Team Leader or tell them you will get back to them. Never give false answers or make commitments on behalf of the team or firm.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Never argue with the client, architect, or owner unless your Team Leader or senior on site permits it.</span></li>
+        </ul>
+
+        <div class="hb-info-box amber">
+          <i class="fa-solid fa-triangle-exclamation"></i>
           <div class="hb-info-box-body">
-            <strong>You represent PHX India</strong>
-            At all times — on location, in transit, and on social media — you carry the firm's reputation with you. Conduct yourself accordingly.
+            <strong>Commitment &amp; Copyrights</strong>
+            Saying yes to an assignment sets a whole chain of coordination in motion — cancelling a booked assignment is thoroughly unprofessional and is only done in circumstances beyond our control. Every project, design, and site you shoot carries copyrights of its designer, owner, or creator. Using assignment images on personal pages or social media is a copyright violation and is strictly prohibited — always take clearance from admin before any site-related uploads.
           </div>
         </div>
       </div>
@@ -3007,18 +3131,18 @@ body {
         </div>
 
         <table class="hb-table">
-          <thead><tr><th>Period</th><th>Status</th><th>Leave Entitlement</th><th>Notice Period</th></tr></thead>
+          <thead><tr><th>Period</th><th>Status</th><th>Leave</th><th>Notice to end employment</th></tr></thead>
           <tbody>
-            <tr><td>Day 1 – 179</td><td>Probationary</td><td>Basic only</td><td>2 weeks (regular staff)</td></tr>
-            <tr><td>Day 180+</td><td>Confirmed</td><td>Full entitlements</td><td>2 weeks (regular) / 4 weeks (TL)</td></tr>
+            <tr><td>During probation (90–180 days)</td><td>Probationary</td><td>None — leave taken is treated as Leave Without Pay (LWP)</td><td>None — either side may terminate without notice</td></tr>
+            <tr><td>After confirmation</td><td>Confirmed</td><td>Full entitlements</td><td>2 weeks (regular staff) / 4 weeks (Team Leaders &amp; Managers)</td></tr>
           </tbody>
         </table>
 
         <div class="hb-info-box amber">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <div class="hb-info-box-body">
-            <strong>Probation may be extended</strong>
-            If performance during probation does not meet expectations, the firm may extend the probation period up to 180 days before making a final decision on confirmation or separation.
+            <strong>Probation is a two-way evaluation</strong>
+            The probationary period runs from a minimum of 90 to a maximum of 180 days from your hire date. During this time the management evaluates the new employee, and the employee evaluates the firm. On completion, a review is given and benefits begin as appropriate.
           </div>
         </div>
       </div>
@@ -3058,6 +3182,14 @@ body {
           <li><i class="fa-solid fa-check"></i><span>If you are unable to attend on a given day, you must notify your manager before your scheduled start time.</span></li>
           <li><i class="fa-solid fa-check"></i><span>Unexplained absence for 3 or more consecutive days may be treated as abandonment of employment.</span></li>
         </ul>
+
+        <div class="hb-info-box blue">
+          <i class="fa-solid fa-circle-info"></i>
+          <div class="hb-info-box-body">
+            <strong>Professional (crew) staff timing</strong>
+            On assignment days, the crew reports at the time set by their Team Leader. After a shoot that ends past 9:00 PM or runs over 9 hours, they may report late the next day — but no later than 12:00 noon. On non-assignment days they follow the standard office timings above. When in doubt, follow the standard office timing.
+          </div>
+        </div>
       </div>
       <div class="section-read-banner" id="banner-office-rules"><i class="fa-solid fa-circle-check"></i><span>Section complete — well done!</span></div>
       <div class="read-sentinel" data-section="office-rules"></div>
@@ -3079,25 +3211,29 @@ body {
         </div>
 
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-circle-dot"></i><span>Salary is reviewed annually. Reviews are based on performance, not tenure alone.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Increments are not guaranteed. They are awarded at the firm's discretion based on your contribution.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Any changes to your salary will be communicated in writing by management.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Salary is paid monthly, directly to your bank account. Standard deductions apply as per income tax laws, state laws, and firm policies.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Your payslip recording your monthly salary is emailed to you every month. A detailed breakdown is available from the accounts department.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Remuneration is based primarily on merit and therefore varies from employee to employee. Wages are reviewed yearly, typically around the close of the financial year, depending on market conditions and performance reviews.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>For those entitled to them, commissions and bonuses are paid quarterly or half-yearly. Employee benefits and reward payouts are paid yearly.</span></li>
         </ul>
 
-        <h2 class="hb-h2">Client Advance Payment Rates</h2>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">These are advance payment rates collected from clients before their project begins — understand them because they affect when projects can be confirmed.</p>
-        <div class="hb-stat-grid">
-          <div class="hb-stat"><div class="hb-stat-value">50%</div><div class="hb-stat-label">Photo / Video / Reel</div></div>
-          <div class="hb-stat"><div class="hb-stat-value">60%</div><div class="hb-stat-label">Styling assignments</div></div>
-        </div>
-
-        <div class="hb-info-box amber">
-          <i class="fa-solid fa-triangle-exclamation"></i>
+        <h2 class="hb-h2">Overtime &amp; Paid Time Off</h2>
+        <div class="hb-info-box blue">
+          <i class="fa-solid fa-circle-info"></i>
           <div class="hb-info-box-body">
-            <strong>No advance = no confirmed shoot</strong>
-            A shoot is not confirmed until the advance payment is received by CRM. Production must not be briefed and dates must not be committed until this is confirmed.
+            <strong>There is no standard overtime policy — it is handled case by case</strong>
+            For extra hours put in by support staff or professionals at the management's request, paid time off (PTO) is given to set off the overtime. However, if you have to put in extra hours because you failed to deliver your work on schedule, no overtime or PTO is allowed.
           </div>
         </div>
+        <ul class="hb-rule-list">
+          <li><i class="fa-solid fa-circle-dot"></i><span>Crew and professional staff have no fixed time limits while on an assignment. The firm values and rewards such commitment — in cash, kind, or benefits, at the management's discretion.</span></li>
+        </ul>
+
+        <h2 class="hb-h2">Benefits &amp; Services</h2>
+        <ul class="hb-rule-list">
+          <li><i class="fa-solid fa-circle-dot"></i><span>Leave benefits are currently offered to confirmed employees (see the Leave Policy section).</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>The firm is developing further benefit programs — including Life Insurance, Health Insurance, and long-term service rewards — and will share details and qualifying criteria in due course.</span></li>
+        </ul>
       </div>
       <div class="section-read-banner" id="banner-salary-benefits"><i class="fa-solid fa-circle-check"></i><span>Section complete — well done!</span></div>
       <div class="read-sentinel" data-section="salary-benefits"></div>
@@ -3115,30 +3251,19 @@ body {
           <div class="hb-stat"><div class="hb-stat-value">52</div><div class="hb-stat-label">Sundays (weekly off)</div></div>
         </div>
 
-        <h2 class="hb-h2">Official Holidays</h2>
-        <table class="hb-table">
-          <thead><tr><th>#</th><th>Holiday</th><th>Approx. Date</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td>Republic Day</td><td>26 January</td></tr>
-            <tr><td>2</td><td>Holi</td><td>March</td></tr>
-            <tr><td>3</td><td>Good Friday</td><td>April</td></tr>
-            <tr><td>4</td><td>Dr Ambedkar Jayanti</td><td>14 April</td></tr>
-            <tr><td>5</td><td>Maharashtra Day</td><td>1 May</td></tr>
-            <tr><td>6</td><td>Independence Day</td><td>15 August</td></tr>
-            <tr><td>7</td><td>Ganesh Chaturthi</td><td>August / September</td></tr>
-            <tr><td>8</td><td>Dussehra (Navami)</td><td>October</td></tr>
-            <tr><td>9</td><td>Diwali (Laxmi Puja)</td><td>October / November</td></tr>
-            <tr><td>10</td><td>Diwali (Padwa)</td><td>October / November</td></tr>
-            <tr><td>11</td><td>Christmas</td><td>25 December</td></tr>
-            <tr><td>12</td><td>New Year's Day</td><td>1 January</td></tr>
-          </tbody>
-        </table>
+        <h2 class="hb-h2">How Holidays Work</h2>
+        <ul class="hb-rule-list">
+          <li><i class="fa-solid fa-circle-dot"></i><span>One day off every week — your right and mandatory by law. For practical reasons, Sunday is the weekly day off.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>12 official holidays are observed each year. <strong>The specific list of holidays is circulated at the beginning of the year.</strong></span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Each employee may additionally avail 2 restricted holidays, to be used during their relevant festivals. Intimate the department head and HR so they are marked accordingly — choose wisely.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Professional (crew) staff do not have a specific fixed day off owing to the nature of their work, but can avail their day off by following the firm's guidelines.</span></li>
+        </ul>
 
-        <div class="hb-info-box blue">
-          <i class="fa-solid fa-circle-info"></i>
+        <div class="hb-info-box amber">
+          <i class="fa-solid fa-triangle-exclamation"></i>
           <div class="hb-info-box-body">
-            <strong>Restricted Holidays</strong>
-            2 restricted holidays per year are available. Employees may choose which 2 they wish to observe from a pre-approved list issued annually by the firm. These must be applied for in advance.
+            <strong>No leave during notice or probation</strong>
+            No employee may avail leave during the notice or probation period. Any leave or absence during the notice period is treated as a shortfall in notice, and salary may be forfeited for the equivalent number of days. The firm reserves the right to amend, modify, or cancel any leave privilege, with intimation to employees.
           </div>
         </div>
       </div>
@@ -3162,14 +3287,23 @@ body {
 
         <h2 class="hb-h2">Leave Entitlements (Post 180 Days)</h2>
         <table class="hb-table">
-          <thead><tr><th>Leave Type</th><th>Abbreviation</th><th>Days per Year</th><th>Notes</th></tr></thead>
+          <thead><tr><th>Leave Type</th><th>Abbr.</th><th>Days / Year</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td>Casual Leave</td><td>CL</td><td>6 days</td><td>For personal / family needs. Prior notice preferred.</td></tr>
-            <tr><td>Sick Leave</td><td>SL</td><td>6 days</td><td>Medical reasons. Certificate may be required for 3+ consecutive days.</td></tr>
-            <tr><td>Earned Leave</td><td>EL</td><td>4 days</td><td>Accrued through service. Can be carried forward (subject to cap).</td></tr>
-            <tr><td>Special Emergency Leave</td><td>SEL</td><td>Up to 6 days</td><td>Exceptional circumstances only. Requires management approval.</td></tr>
+            <tr><td>Casual Leave</td><td>CL</td><td>6</td><td>Apply 7 days in advance via Admin after Team Head approval. Half-days allowed. Lapses if not used within the year.</td></tr>
+            <tr><td>Sick Leave</td><td>SL</td><td>6</td><td>Medical reasons. Medical certificate required for 3+ continuous days. Half-days allowed.</td></tr>
+            <tr><td>Special Sick Leave</td><td>SSL</td><td>Carried fwd</td><td>Unused sick leave carried forward (max 30 days) for major sickness, once Sick Leave is exhausted.</td></tr>
+            <tr><td>Earned Leave</td><td>EL</td><td>4</td><td>Privilege Leave. No half-days. One day credited per quarter for 1-year+ staff who took no leave that quarter. Carried forward.</td></tr>
+            <tr><td>Special Earned Leave</td><td>SEL</td><td>Up to 6</td><td>Privilege Leave. Awarded by management to reward high performance and dedication. Carried forward.</td></tr>
           </tbody>
         </table>
+
+        <div class="hb-info-box blue">
+          <i class="fa-solid fa-circle-info"></i>
+          <div class="hb-info-box-body">
+            <strong>Privilege Leave = 10 days</strong>
+            Earned Leave (4) and Special Earned Leave (up to 6) together make up your 10 days of Privilege Leave. Privilege leave is available to those who complete one year of continuous employment and, unlike CL and SL, is carried forward and can be used any time during your employment.
+          </div>
+        </div>
 
         <h2 class="hb-h2">Parental Leave</h2>
         <table class="hb-table">
@@ -3208,7 +3342,7 @@ body {
 
         <h2 class="hb-h2">How to Claim</h2>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-receipt"></i><span>Retain original receipts for every expense you intend to claim. Digital photos of receipts are acceptable only if pre-approved by your manager.</span></li>
+          <li><i class="fa-solid fa-receipt"></i><span>Retain the original valid bill for every expense you intend to claim. Make purchases from places that issue a proper bill — for high-GST expenses, the invoice must be in the firm's name with the firm's GST number printed on it.</span></li>
           <li><i class="fa-solid fa-receipt"></i><span>Complete the expense voucher in full — date, amount, purpose, project reference, and your signature.</span></li>
           <li><i class="fa-solid fa-receipt"></i><span>Submit the voucher to accounts within the same week the expense was incurred, wherever possible.</span></li>
           <li><i class="fa-solid fa-receipt"></i><span>Reimbursement will be processed within 7 working days of receipt of a complete, approved voucher.</span></li>
@@ -3219,7 +3353,7 @@ body {
           <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Personal expenses — meals, travel, or purchases not directly required for firm business.</span></li>
           <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Expenses incurred without prior approval where approval was required.</span></li>
           <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Claims submitted without receipts or supporting documentation.</span></li>
-          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Expenses claimed more than 30 days after they were incurred without a valid reason for the delay.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Claims without a bill or supporting document — these may not be cleared and require special authorisation from the partners. (Vouchers are to be submitted weekly.)</span></li>
         </ul>
       </div>
       <div class="section-read-banner" id="banner-expenses"><i class="fa-solid fa-circle-check"></i><span>Section complete — well done!</span></div>
@@ -3236,8 +3370,8 @@ body {
 
         <h2 class="hb-h2">Usage Policy</h2>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-circle-dot"></i><span>Firm equipment is provided for firm business only. Using it for personal projects, freelance work, or any other non-PHX India purpose is prohibited.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Equipment must be checked out and checked back in through the proper asset log. Never take equipment home overnight without explicit approval.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Firm assets exist to conduct firm business. Using equipment for an outside business or personal gain is never permitted — though limited, lawful personal use of mobile devices, laptops, and tablets within reason is allowed, provided it does not interfere with your work.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Theft of firm assets, irrespective of value, is a serious breach of the Code. Equipment should be checked out and back in through the proper asset log; never take equipment home overnight without explicit approval.</span></li>
           <li><i class="fa-solid fa-circle-dot"></i><span>Report any fault, damage, or loss to your manager immediately. Do not attempt to repair equipment yourself.</span></li>
           <li><i class="fa-solid fa-circle-dot"></i><span>Storage and charging of equipment is your responsibility on the day it is assigned to you.</span></li>
         </ul>
@@ -3284,7 +3418,7 @@ body {
           </div>
         </div>
 
-        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Client relationships developed through your work at PHX India are firm relationships — not personal ones. You may not solicit or redirect clients for personal business during your employment or for a reasonable period after leaving the firm.</p>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Client relationships developed through your work at PHX India are firm relationships — not personal ones. You may not use the firm's products, services, internal tools, or information to improperly benefit yourself or someone you know.</p>
       </div>
       <div class="section-read-banner" id="banner-conflict-interest"><i class="fa-solid fa-circle-check"></i><span>Section complete — well done!</span></div>
       <div class="read-sentinel" data-section="conflict-interest"></div>
@@ -3298,18 +3432,19 @@ body {
       <div class="hb-section-body">
         <p class="hb-lead">In the imaging industry, digital content is the product. Mishandling it — even inadvertently — can cause significant harm to clients and to PHX India's reputation. These rules are strict and apply to all employees at all times.</p>
 
-        <h2 class="hb-h2">Client Content</h2>
+        <h2 class="hb-h2">Copyright &amp; Client Content</h2>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-shield-halved"></i><span>Client work — photographs, videos, raw files, edited deliverables — is the property of the client. Do not share, post, or distribute it without explicit written authorisation from both the client and PHX India management.</span></li>
-          <li><i class="fa-solid fa-shield-halved"></i><span>Do not use client work in your personal portfolio without written approval from the client and the firm.</span></li>
-          <li><i class="fa-solid fa-shield-halved"></i><span>Never share raw or unedited files with anyone outside the firm — not even with the client.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span>Work produced on assignment is copyright-protected and owned by PHX India (the firm). The designs, sites, and subjects you shoot also carry the copyrights of their designers, owners, or creators. Respect both.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span>You may use images you are credited on as part of your personal portfolio — but only with the firm's permission, and with proper credit to PHX India, the client, and any other copyright holder. Never use them on any public platform without that permission.</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span>Always take clearance from admin before making any site-related uploads. If the firm asks you to remove an image you have uploaded, do so immediately and without question.</span></li>
         </ul>
 
-        <h2 class="hb-h2">Social Media</h2>
+        <h2 class="hb-h2">Social Media &amp; the News Media</h2>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-circle-dot"></i><span>Do not post about clients, projects, or firm matters on personal social media without approval.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Do not tag PHX India locations, clients, or staff in posts that could be embarrassing or reputationally damaging.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Any social media activity that publicly criticises the firm, its clients, or its staff may result in disciplinary action.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Do not state personal opinions on behalf of the firm unless authorised. Ensure your personal accounts make clear that your views do not represent PHX India.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Never share any intellectual property, or the status of any assignment, on social media. Social media should not be used during work hours except where it relates to business.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Do not attack or malign any person, product, customer, supplier, or colleague. Publicly criticising the firm, its clients, or its staff may result in disciplinary action.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Only partners and authorised professionals may speak with or respond to the news media on behalf of the firm. Direct any media query to them.</span></li>
         </ul>
 
         <h2 class="hb-h2">Data &amp; Devices</h2>
@@ -3333,33 +3468,34 @@ body {
         <p>How PHX India handles violations of policy and standards — and what each level means for you.</p>
       </div>
       <div class="hb-section-body">
-        <p class="hb-lead">PHX India operates a structured disciplinary process for violations that are not grounds for immediate dismissal. The process is fair, documented, and escalating. The goal is correction — not punishment — except in cases of gross misconduct.</p>
+        <p class="hb-lead">PHX India holds each employee to its work rules and codes of conduct. The firm is committed to a progressive approach to disciplinary action, but certain serious violations are grounds for immediate termination. Disciplinary actions vary depending on the violation.</p>
 
-        <h2 class="hb-h2">Disciplinary Process</h2>
-        <table class="hb-table">
-          <thead><tr><th>Level</th><th>Type</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td>Verbal Warning</td><td>First instance of a minor violation. Conversation with your manager. Recorded internally.</td></tr>
-            <tr><td>2</td><td>Written Warning</td><td>Repeated or more serious violation. Formal written record. Copy kept on file.</td></tr>
-            <tr><td>3</td><td>Final Written Warning</td><td>Further violation after written warning. States that dismissal will follow if conduct does not improve.</td></tr>
-            <tr><td>4</td><td>Dismissal</td><td>Continued violations after final warning — or a single act of gross misconduct.</td></tr>
-          </tbody>
-        </table>
+        <h2 class="hb-h2">Disciplinary Actions</h2>
+        <ul class="hb-rule-list">
+          <li><i class="fa-solid fa-gavel"></i><span><strong>Penalties and fines.</strong></span></li>
+          <li><i class="fa-solid fa-gavel"></i><span><strong>Demotion.</strong></span></li>
+          <li><i class="fa-solid fa-gavel"></i><span><strong>Reprimand.</strong></span></li>
+          <li><i class="fa-solid fa-gavel"></i><span><strong>Suspension or termination</strong> for more serious offences (involuntary withdrawal for partners).</span></li>
+          <li><i class="fa-solid fa-gavel"></i><span><strong>Detraction of benefits</strong> for a definite or indefinite period.</span></li>
+          <li><i class="fa-solid fa-gavel"></i><span><strong>Civil or criminal sanctions.</strong> The firm may take legal action in cases of corruption, theft, embezzlement, or other unlawful behaviour.</span></li>
+        </ul>
 
-        <h2 class="hb-h2">Gross Misconduct — Immediate Dismissal</h2>
+        <h2 class="hb-h2">Grounds for Immediate Termination</h2>
         <div class="hb-info-box red">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <div class="hb-info-box-body">
-            <strong>The following result in immediate dismissal without notice</strong>
+            <strong>Certain violations are grounds for immediate termination of employment</strong>
+            The list below is not exhaustive.
           </div>
         </div>
         <ul class="hb-rule-list">
-          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Theft of firm property, client property, or a colleague's property.</span></li>
-          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Physical assault, harassment, or threats directed at any person.</span></li>
-          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Sharing confidential client data externally without authorisation.</span></li>
-          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Falsification of attendance, expenses, or any firm record.</span></li>
-          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Being under the influence of alcohol or controlled substances during work hours.</span></li>
-          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Serious insubordination — deliberate and repeated refusal to carry out reasonable instructions from management.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Unauthorised access to firm property outside of business hours.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Using firm equipment and/or firm vehicles without authorisation.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Theft.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Insubordination.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Vandalism or destruction of firm property.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Misrepresentation of PHX India to a customer, a prospective customer, the general public, or an employee.</span></li>
+          <li><i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Sharing firm business practices.</span></li>
         </ul>
       </div>
       <div class="section-read-banner" id="banner-violation-code"><i class="fa-solid fa-circle-check"></i><span>Section complete — well done!</span></div>
@@ -3372,30 +3508,42 @@ body {
         <p>Notice periods, the exit process, and what happens when employment ends at PHX India.</p>
       </div>
       <div class="hb-section-body">
-        <h2 class="hb-h2">Notice Periods</h2>
+        <p class="hb-lead">Separation of employment is the event of an employee ceasing to be part of the firm's workforce. It is handled with discretion, professionalism, and official documentation, as dictated by law. Separation may be voluntary or involuntary.</p>
+
+        <h2 class="hb-h2">Types of Separation</h2>
         <table class="hb-table">
-          <thead><tr><th>Role</th><th>Notice Period</th></tr></thead>
+          <thead><tr><th>Category</th><th>Includes</th></tr></thead>
           <tbody>
-            <tr><td>Regular Staff</td><td>2 weeks</td></tr>
-            <tr><td>Team Leaders &amp; Senior Professionals</td><td>4 weeks</td></tr>
+            <tr><td>Voluntary</td><td>Resignation · Retirement (age 60, subject to management) · Expiration or completion of contract · Failure to show for a specified number of days without notice</td></tr>
+            <tr><td>Involuntary</td><td>Discharge for cause (misconduct or breach of code) · Discharge without cause (lay-off, restructuring)</td></tr>
           </tbody>
         </table>
 
-        <div class="hb-info-box blue">
-          <i class="fa-solid fa-circle-info"></i>
+        <h2 class="hb-h2">Notice Periods</h2>
+        <table class="hb-table">
+          <thead><tr><th>Role / Case</th><th>Notice Period</th></tr></thead>
+          <tbody>
+            <tr><td>Regular staff (resignation, contract end, lay-off)</td><td>2 weeks</td></tr>
+            <tr><td>Team Leaders &amp; Managers</td><td>4 weeks (or until handover is complete)</td></tr>
+            <tr><td>Professional &amp; technical staff</td><td>4 weeks + sign a Non-Disclosure &amp; Fair Trade agreement</td></tr>
+            <tr><td>Lay-off / discharge without cause</td><td>1 month notice or pay in lieu (on last basic salary)</td></tr>
+          </tbody>
+        </table>
+
+        <div class="hb-info-box amber">
+          <i class="fa-solid fa-triangle-exclamation"></i>
           <div class="hb-info-box-body">
-            <strong>Notice applies in both directions</strong>
-            The same notice period applies whether you are resigning or the firm is ending your employment (other than cases of gross misconduct, where notice may not apply).
+            <strong>Immediate termination forfeits accrued benefits</strong>
+            For failure to show without notice or discharge for cause, termination can be with immediate effect and with no accrued benefits attached. Accrued benefits and rewards are also not settled if the notice period and termination clause are not adhered to.
           </div>
         </div>
 
         <h2 class="hb-h2">Exit Process</h2>
         <ul class="hb-rule-list">
           <li><i class="fa-solid fa-circle-dot"></i><span>Resignation must be submitted in writing to your direct manager and HR.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>All firm equipment, access cards, and credentials must be returned on or before your last working day.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>All firm property — equipment, access cards, and credentials — must be returned in appropriate condition. No final payment is made until all items are returned; the cost of replacing un-returned items, and any outstanding financial obligations owed to the firm, is deducted from your final pay.</span></li>
           <li><i class="fa-solid fa-circle-dot"></i><span>All pending work must be documented and handed over to your manager or designated successor.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Final salary, including any outstanding reimbursements, is processed within the next regular pay cycle after your last day.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Firm data must not be retained, copied, or shared after your employment ends. This is a legal obligation.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Firm data must not be retained, copied, or shared after your employment ends. The Non-Disclosure Agreement remains valid in perpetuity, even after you leave the firm.</span></li>
         </ul>
       </div>
       <div class="section-read-banner" id="banner-employment-termination"><i class="fa-solid fa-circle-check"></i><span>Section complete — well done!</span></div>
@@ -3412,8 +3560,10 @@ body {
 
         <h2 class="hb-h2">Usage Rules</h2>
         <ul class="hb-rule-list">
+          <li><i class="fa-solid fa-circle-dot"></i><span>Never use a cell phone while driving or while operating equipment.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Do not use cell phones for surfing the internet or gaming during work hours, and never use a phone to record confidential information.</span></li>
           <li><i class="fa-solid fa-circle-dot"></i><span>Personal phone calls should be limited to breaks and genuine emergencies. Step away from your workspace for personal calls.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>Do not use your phone during meetings, client interactions, or active shoot assignments.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>Do not use your phone during meetings, client interactions, or active shoot assignments. Keep it on silent during meetings.</span></li>
           <li><i class="fa-solid fa-circle-dot"></i><span>Do not use your phone to photograph or record inside the office or on client premises without explicit approval.</span></li>
           <li><i class="fa-solid fa-circle-dot"></i><span>Phones must be on silent or vibrate during office hours. Loud ringtones or speaker calls in shared spaces are not acceptable.</span></li>
         </ul>
@@ -3429,7 +3579,7 @@ body {
 
         <ul class="hb-rule-list">
           <li><i class="fa-solid fa-circle-dot"></i><span>Any images taken on personal devices during firm assignments remain subject to the firm's confidentiality rules. Do not post them without authorisation.</span></li>
-          <li><i class="fa-solid fa-circle-dot"></i><span>If a client asks you to photograph or share content, refer them to CRM. Do not act on such requests independently.</span></li>
+          <li><i class="fa-solid fa-circle-dot"></i><span>If a client asks you to photograph or share content, refer the request to your Team Leader. Do not act on such requests independently.</span></li>
         </ul>
       </div>
       <div class="section-read-banner" id="banner-cell-phone"><i class="fa-solid fa-circle-check"></i><span>Section complete — well done!</span></div>
@@ -3443,6 +3593,10 @@ body {
       <div class="section-header">
         <h1>Service Lifecycle</h1>
         <p>The complete 12-stage service lifecycle from first client contact to project close. Click any stage to view full details, ownership, rules, and dependencies.</p>
+      </div>
+      <div class="supplementary-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Supplementary operational reference — sourced from the firm's Process Document, not the employee handbook. Where anything here differs from the handbook, the handbook prevails.</span>
       </div>
 
       <!-- Legend -->
@@ -3571,6 +3725,10 @@ body {
       <div class="section-header">
         <h1>Team Roles &amp; Responsibilities</h1>
         <p>PHX INDIA operates with three core teams. Each team has clearly defined ownership of specific lifecycle stages. Understanding these boundaries is essential.</p>
+      </div>
+      <div class="supplementary-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Supplementary operational reference — sourced from the firm's Process Document, not the employee handbook. Where anything here differs from the handbook, the handbook prevails.</span>
       </div>
 
       <!-- CRM Team -->
@@ -3765,6 +3923,10 @@ body {
         <h1>Dos &amp; Don'ts</h1>
         <p>Clear operational guidelines for every team. These are not suggestions — they are standards that every employee must follow without exception.</p>
       </div>
+      <div class="supplementary-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Supplementary operational reference — sourced from the firm's Process Document, not the employee handbook. Where anything here differs from the handbook, the handbook prevails.</span>
+      </div>
 
       <!-- CRM Team -->
       <div class="dosdonts-team">
@@ -3860,6 +4022,10 @@ body {
       <div class="section-header">
         <h1>Policies &amp; Rules</h1>
         <p>Company-wide operational policies. These are hard rules governing payment, communication, scope management, and file handling. No exceptions unless explicitly authorised by senior management.</p>
+      </div>
+      <div class="supplementary-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Supplementary operational reference — sourced from the firm's Process Document, not the employee handbook. Where anything here differs from the handbook, the handbook prevails.</span>
       </div>
 
       <div class="policy-item critical">
@@ -3969,6 +4135,20 @@ body {
           <div class="ready-icon"><i class="fa-solid fa-brain"></i></div>
           <h2>Ready to Test Your Knowledge?</h2>
           <p id="quizStartDesc">Up to 20 questions drawn from the sections you have read. Pass mark: 75%.</p>
+          <div class="quiz-identity">
+            <label>Full Name
+              <input type="text" id="quizName" placeholder="Your full name" autocomplete="name">
+            </label>
+            <label>Designation
+              <input type="text" id="quizDesignation" placeholder="Your role / designation" autocomplete="organization-title">
+            </label>
+            <label>Employee Code
+              <input type="text" id="quizEmpCode" placeholder="Your employee code">
+            </label>
+            <div class="quiz-identity-error" id="quizIdentityError" style="display:none;">
+              <i class="fa-solid fa-circle-exclamation"></i> Please enter your name, designation, and employee code to begin.
+            </div>
+          </div>
           <button class="btn-start-quiz" onclick="startQuiz()">
             <i class="fa-solid fa-play" style="margin-right:8px"></i>Start Test
           </button>
@@ -4002,6 +4182,7 @@ body {
             <div class="quiz-score-label">Score</div>
           </div>
           <h2 id="quizResultTitle"></h2>
+          <div class="quiz-candidate" id="quizCandidate"></div>
           <p class="result-detail" id="quizResultDetail"></p>
           <button class="btn btn-primary" onclick="retakeQuiz()">
             <i class="fa-solid fa-rotate-right"></i> Retake
@@ -4015,12 +4196,42 @@ body {
     </section>
 
     <!-- ==========================================
+         HANDBOOK PDF — ORIGINAL SOURCE DOCUMENT
+         ========================================== -->
+    <section class="section" id="section-handbook-pdf">
+      <div class="section-header">
+        <h1>Handbook PDF</h1>
+        <p>The complete, original PHX India handbook — the single source of truth for everything in this portal. View it inline below or download the original PDF.</p>
+      </div>
+
+      <div class="pdf-actions">
+        <a class="btn-start-quiz" href="assets/PHX-India-Handbook.pdf" download="PHX-India-Handbook.pdf">
+          <i class="fa-solid fa-download" style="margin-right:8px"></i>Download PDF
+        </a>
+        <a class="btn-outline-link" href="assets/PHX-India-Handbook.pdf" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square" style="margin-right:8px"></i>Open in new tab
+        </a>
+      </div>
+
+      <div class="pdf-viewer">
+        <iframe src="assets/PHX-India-Handbook.pdf#view=FitH" title="PHX India Handbook — original PDF">
+          Your browser cannot display the PDF inline.
+          <a href="assets/PHX-India-Handbook.pdf" download>Download it instead.</a>
+        </iframe>
+      </div>
+    </section>
+
+    <!-- ==========================================
          SECTION 7: CONTACT & ESCALATION
          ========================================== -->
     <section class="section" id="section-contact">
       <div class="section-header">
         <h1>Contact &amp; Escalation</h1>
         <p>Quick reference for CRM team contacts and the escalation hierarchy. All phone numbers are clickable.</p>
+      </div>
+      <div class="supplementary-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Supplementary operational reference — sourced from the firm's Process Document, not the employee handbook. Where anything here differs from the handbook, the handbook prevails.</span>
       </div>
 
       <div class="contact-grid">
@@ -4055,15 +4266,6 @@ body {
           <li><i class="fa-solid fa-arrow-right"></i><span><strong>Escalation path: Level 1 first, then Level 2.</strong> Always try Kalpak Fadia first. Escalate to Maitreyi Honaver only if Level 1 cannot resolve.</span></li>
           <li><i class="fa-solid fa-arrow-right"></i><span><strong>CRM briefs Production.</strong> Never start a shoot without a full brief from CRM confirming scope, deliverables, and advance payment status.</span></li>
         </ul>
-      </div>
-
-      <div style="margin-top:32px; padding:24px 28px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:var(--radius-md);">
-        <h3 style="font-size:14px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-          <i class="fa-solid fa-building" style="color:var(--text-muted);"></i> About PHX INDIA Group
-        </h3>
-        <p style="font-size:13px; color:var(--text-secondary); line-height:1.7;">
-          PHX INDIA Imaging Services LLP specialises in photography, videography, reels, and styling — primarily for the interior design and architecture industry. The PHX INDIA group includes two sister brands: <strong>SF INDIA</strong> (Interior Styling Co.) and <strong>MG INDIA</strong> (Architectural/interior videography). This training portal serves all brands under the PHX INDIA umbrella.
-        </p>
       </div>
     </section>
 
@@ -4373,23 +4575,23 @@ const QUIZ_QUESTIONS = [
   { section:'who-we-are', question:"PHX India's full registered business name is:", options:['PHX India Photography Ltd','PHX India Imaging Services LLP','PHX India Creative Services Pvt Ltd','PHX India Studios LLP'], correct:1, explanation:'The registered entity is PHX India Imaging Services LLP.' },
   // what-we-believe
   { section:'what-we-believe', question:"PHX India's first and non-negotiable standard is:", options:['Speed of delivery','Competitive pricing','Quality of work','Client satisfaction scores'], correct:2, explanation:'Quality First is the primary, non-negotiable standard at PHX India.' },
-  { section:'what-we-believe', question:'"Integrity Always" at PHX India means:', options:['Always charging the highest rate','Being honest and transparent with clients and colleagues','Never giving discounts','Copying competitor strategies'], correct:1, explanation:'Integrity means honesty and transparency in every interaction — with clients and internally.' },
+  { section:'what-we-believe', question:'PHX India believes that honesty is:', options:['Optional in business dealings','The best policy and a core practice in everything we do','Only expected of management','Less important than speed'], correct:1, explanation:'The firm holds that honesty is the best policy and a core practice in everything it does.' },
   // our-philosophy
-  { section:'our-philosophy', question:'At PHX India, standards are described as:', options:['Flexible, adapting to each client','Aspirational targets','Relentless — no acceptable compromise','Suggestions for best practice'], correct:2, explanation:'PHX India operates on relentless standards. There is no acceptable compromise.' },
-  { section:'our-philosophy', question:"PHX India's philosophy on problems is:", options:['Handle them privately where possible','Escalate immediately — an undisclosed problem is worse than the problem itself','Resolve at team level before escalating','Wait for the client to raise them'], correct:1, explanation:'Problems must be escalated immediately. Concealing a problem makes it worse.' },
+  { section:'our-philosophy', question:'Which of these is part of PHX India\'s philosophy?', options:['Avoid change to stay consistent','Stay curious and keep asking questions','Work in silos','Prioritise complexity'], correct:1, explanation:'"We stay curious" — curiosity and a thirst for knowledge are central to the firm\'s philosophy.' },
+  { section:'our-philosophy', question:'According to the firm\'s philosophy, simplicity is:', options:['Unimportant','Hard to achieve, but it makes things easier','A sign of low effort','Only suitable for small projects'], correct:1, explanation:'"We prefer simple things" — simplicity is hard to achieve, but in the end it makes things much easier.' },
   // code-of-ethics
-  { section:'code-of-ethics', question:'Which is a key ethical principle at PHX India?', options:['Sharing project details after completion','Confidentiality of client information','Discussing client budgets with others','Using client contacts for personal business'], correct:1, explanation:'Client confidentiality is a core ethical principle. Client information must never be shared without authorisation.' },
-  { section:'code-of-ethics', question:'Zero-tolerance violations result in:', options:['A verbal warning','A written warning','A final written warning','Immediate dismissal'], correct:3, explanation:'Theft, harassment, falsification, and sharing confidential data are zero-tolerance violations resulting in immediate dismissal.' },
+  { section:'code-of-ethics', question:'Which is one of PHX India\'s foundational ethical principles?', options:['Maximise profit above all else','We shall do no Evil','Always undercut competitors','Avoid sharing knowledge'], correct:1, explanation:'"We shall do no Evil" is one of the six foundational principles in the Code of Ethics.' },
+  { section:'code-of-ethics', question:'The Code of Ethics asks every employee to:', options:['Work alone and compete with colleagues','"Belong" to the team and act as one','Avoid asking questions','Prioritise personal goals over the team'], correct:1, explanation:'One of the six foundational principles is to "belong" to the team and act as one — looking out for the team at all times.' },
   // general-conduct
   { section:'general-conduct', question:'Personal grievances between colleagues should be:', options:['Aired publicly to resolve quickly','Addressed privately and escalated if needed','Posted in group chats','Ignored entirely'], correct:1, explanation:'Grievances must be handled privately. Escalate through the proper channel only if unresolved.' },
   { section:'general-conduct', question:'Which behaviour is explicitly prohibited at PHX India?', options:['Taking tea breaks','Using firm resources for personal commercial activity','Discussing workload with your manager','Arriving 5 minutes before start time'], correct:1, explanation:'Using firm resources — equipment, internet, or time — for personal commercial activity is prohibited.' },
   // professional-conduct
-  { section:'professional-conduct', question:'Who is authorised to communicate directly with clients?', options:['Any employee when needed','Only the Production Team on location','Only the CRM Team','Editing Studios during feedback'], correct:2, explanation:'Only the CRM Team communicates directly with clients. All other teams must not contact clients independently.' },
-  { section:'professional-conduct', question:'If a client makes a scope change request directly to you on location, you should:', options:['Action it immediately to keep the client happy','Discuss and estimate additional cost on the spot','Contact CRM immediately — do not improvise','Decline and end the shoot'], correct:2, explanation:'Any scope change on location must go through CRM. Never improvise solutions with the client.' },
+  { section:'professional-conduct', question:'While on assignment, who takes the final call on all matters?', options:['Any senior person present','The client','The Team Leader (Shoot-in-Charge)','The newest team member'], correct:2, explanation:'The Team Leader (Photographer, Producer, Stylist, etc.) takes the final call on the assignment, and you act in accordance with those decisions.' },
+  { section:'professional-conduct', question:'If a client asks you something on a shoot that you are unsure about, you should:', options:['Give your best guess to seem helpful','Make a commitment to keep them happy','Direct them to the Team Leader or say you will get back to them','Critique their setup'], correct:2, explanation:'Never give false answers or make commitments on behalf of the team or firm — direct the query to the Team Leader or offer to get back to them.' },
   // employee-types
   { section:'employee-types', question:'What is the probation period at PHX India?', options:['30 to 60 days','60 to 90 days','90 to 180 days','180 to 365 days'], correct:2, explanation:'Probation at PHX India is 90 to 180 days.' },
   { section:'employee-types', question:'Full leave entitlements begin after:', options:['90 days','120 days','180 days','1 year'], correct:2, explanation:'Full leave entitlements apply only after 180 days of employment (confirmed status).' },
-  { section:'employee-types', question:'During probation, the notice period for regular staff is:', options:['No notice required','1 week','2 weeks','4 weeks'], correct:2, explanation:'Regular staff require 2 weeks notice, including during probation.' },
+  { section:'employee-types', question:'During probation, how much notice is required to end employment?', options:['No notice — either side may terminate without notice','1 week','2 weeks','4 weeks'], correct:0, explanation:'During the probationary period, the firm and the employee can terminate employment without notice.' },
   // office-rules
   { section:'office-rules', question:'Standard office hours at PHX India are:', options:['Mon–Fri, 9:00 AM–5:30 PM','Mon–Sat, 10:00 AM–6:30 PM','Mon–Fri, 10:00 AM–7:00 PM','Mon–Sat, 9:00 AM–6:00 PM'], correct:1, explanation:'Office hours are Monday to Saturday, 10:00 AM to 6:30 PM.' },
   { section:'office-rules', question:'The scheduled lunch break is:', options:['12:30 PM – 1:00 PM','1:00 PM – 1:30 PM','1:30 PM – 2:00 PM','12:00 PM – 12:30 PM'], correct:1, explanation:'Lunch is from 1:00 PM to 1:30 PM — 30 minutes.' },
@@ -4397,8 +4599,8 @@ const QUIZ_QUESTIONS = [
   // salary-benefits
   { section:'salary-benefits', question:'By which date is salary paid each month?', options:['1st of the current month','Last day of the current month','Before the 10th of the following month','15th of the following month'], correct:2, explanation:'Salary for the previous month is paid before the 10th of the following month.' },
   { section:'salary-benefits', question:'How often is salary reviewed at PHX India?', options:['Every 6 months','Annually','Every 2 years','Only upon promotion'], correct:1, explanation:'Salary is reviewed annually, based on performance.' },
-  { section:'salary-benefits', question:'What advance is required for Photography, Video, or Reel assignments?', options:['25%','40%','50%','60%'], correct:2, explanation:'50% advance is required from the client before a Photo/Video/Reel shoot is confirmed.' },
-  { section:'salary-benefits', question:'What advance is required for Styling assignments?', options:['40%','50%','60%','75%'], correct:2, explanation:'60% advance is required from the client for Styling assignments.' },
+  { section:'salary-benefits', question:'How are commissions and bonuses paid at PHX India?', options:['Daily','Quarterly or half-yearly','Only on resignation','They are never paid'], correct:1, explanation:'For those entitled to them, commissions and bonuses are paid quarterly or half-yearly; employee benefits and reward payouts are paid yearly.' },
+  { section:'salary-benefits', question:'What is PHX India\'s overtime policy?', options:['Paid at 2x for all extra hours','There is no standard policy — it is case by case, often offset with paid time off (PTO)','Mandatory unpaid overtime every week','Overtime is never permitted'], correct:1, explanation:'There is no standard overtime policy. Extra hours worked at management\'s request are typically offset with paid time off (PTO).' },
   // holidays
   { section:'holidays', question:'How many official public holidays does PHX India observe per year?', options:['8','10','12','14'], correct:2, explanation:'PHX India observes 12 official public holidays per year.' },
   { section:'holidays', question:'How many restricted holidays are available per year?', options:['1','2','4','6'], correct:1, explanation:'2 restricted holidays are available per year, chosen from a pre-approved list.' },
@@ -4417,13 +4619,13 @@ const QUIZ_QUESTIONS = [
   { section:'firm-assets', question:'If firm equipment is damaged due to negligence, who is responsible?', options:['No one — it is an operational risk','The employee responsible','The team collectively','The firm absorbs all costs'], correct:1, explanation:'The employee responsible for negligent damage may be required to contribute to repair or replacement costs.' },
   // conflict-interest
   { section:'conflict-interest', question:'What must you do if you have a potential conflict of interest?', options:['Maintain it quietly if it does not affect work','Disclose it immediately to management','Only disclose if asked directly','Wind it down within 6 months without disclosure'], correct:1, explanation:'Any potential conflict of interest must be disclosed to management immediately.' },
-  { section:'conflict-interest', question:'Client relationships developed through PHX India work are:', options:['Personal — you may take them with you on leaving','Firm relationships — not personal ones','Shared equally between employee and firm','Only firm property for 6 months'], correct:1, explanation:'Clients are firm relationships. Soliciting or redirecting firm clients is prohibited during employment and for a reasonable period after.' },
+  { section:'conflict-interest', question:'Client relationships developed through PHX India work are:', options:['Personal — you may take them with you on leaving','Firm relationships — not personal ones','Shared equally between employee and firm','Only firm property for 6 months'], correct:1, explanation:'Clients are firm relationships, not personal ones. You may not use the firm\'s information or tools to improperly benefit yourself or someone you know.' },
   // digital-ethics
   { section:'digital-ethics', question:'Sharing client work on personal social media without permission is:', options:['Acceptable if the work is excellent','Acceptable if the client approved the project','Never acceptable without explicit written permission','Acceptable after 6 months'], correct:2, explanation:'Client work may never be shared publicly without explicit written authorisation from both the client and PHX India.' },
   { section:'digital-ethics', question:'What is the policy on firm data after leaving PHX India?', options:['You may retain personal copies','Only contacts may be retained','All firm data must be returned — retaining it is a legal violation','Data may be retained for 30 days'], correct:2, explanation:'Retaining firm data after employment ends is a legal violation. All data must be returned or handed over on the last day.' },
   // violation-code
-  { section:'violation-code', question:'What is the first step in the disciplinary process for a minor violation?', options:['Immediate suspension','Verbal warning','Written warning','Termination'], correct:1, explanation:'A verbal warning is the first step for minor violations. It is recorded internally.' },
-  { section:'violation-code', question:'Which of the following results in immediate dismissal?', options:['Being 10 minutes late to work','Submitting expenses a day late','Sharing confidential client data externally','Missing a non-critical deadline'], correct:2, explanation:'Sharing confidential client data without authorisation is gross misconduct and results in immediate dismissal.' },
+  { section:'violation-code', question:'Which of the following is a disciplinary action used at PHX India?', options:['Mandatory unpaid overtime','Demotion','A public apology','A company-wide salary freeze'], correct:1, explanation:'Disciplinary actions include penalties and fines, demotion, reprimand, suspension or termination, and detraction of benefits.' },
+  { section:'violation-code', question:'Which of the following is grounds for immediate termination of employment?', options:['Being 10 minutes late to work','Theft of firm property','Submitting expenses a day late','Taking an approved sick day'], correct:1, explanation:'Theft is one of the firm\'s listed grounds for immediate termination — alongside insubordination, vandalism, unauthorised access, and sharing firm business practices.' },
   // employment-termination
   { section:'employment-termination', question:'Notice period for regular staff at PHX India:', options:['1 week','2 weeks','4 weeks','1 month'], correct:1, explanation:'Regular staff must give or receive 2 weeks notice.' },
   { section:'employment-termination', question:'Notice period for Team Leaders and senior professionals:', options:['2 weeks','3 weeks','4 weeks','6 weeks'], correct:2, explanation:'Team Leaders and senior professionals require 4 weeks notice.' },
@@ -4453,12 +4655,14 @@ const QUIZ_QUESTIONS = [
 const STORE = {
   readSections:  'phx_read_sections',
   openChapters:  'phx_open_chapters',
-  toastShownAt:  'phx_toast_shown'
+  toastShownAt:  'phx_toast_shown',
+  quizTaker:     'phx_quiz_taker'
 };
 
 let readSections  = new Set(JSON.parse(localStorage.getItem(STORE.readSections)  || '[]'));
 let openChapters  = new Set(JSON.parse(localStorage.getItem(STORE.openChapters)  || '["about"]'));
 let toastShownAt  = JSON.parse(localStorage.getItem(STORE.toastShownAt) || '[]');
+let quizTaker     = JSON.parse(localStorage.getItem(STORE.quizTaker) || 'null');
 
 function saveReadSections() {
   localStorage.setItem(STORE.readSections, JSON.stringify([...readSections]));
@@ -4703,6 +4907,24 @@ let score = 0;
 let _quizPool = [];
 
 function startQuiz() {
+  // Require the candidate's identity before the test can begin.
+  const name  = document.getElementById('quizName').value.trim();
+  const desig = document.getElementById('quizDesignation').value.trim();
+  const code  = document.getElementById('quizEmpCode').value.trim();
+  let ok = true;
+  [['quizName', name], ['quizDesignation', desig], ['quizEmpCode', code]].forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (!val) { el.classList.add('invalid'); ok = false; }
+    else el.classList.remove('invalid');
+  });
+  if (!ok) {
+    document.getElementById('quizIdentityError').style.display = 'block';
+    return;
+  }
+  document.getElementById('quizIdentityError').style.display = 'none';
+  quizTaker = { name, designation: desig, code };
+  localStorage.setItem(STORE.quizTaker, JSON.stringify(quizTaker));
+
   // Build pool from read sections
   _quizPool = QUIZ_QUESTIONS
     .filter(q => readSections.has(q.section))
@@ -4784,6 +5006,12 @@ function showResults() {
 
   const pct    = Math.round((score / _quizPool.length) * 100);
   const passed = pct >= 75;
+
+  const cand = document.getElementById('quizCandidate');
+  if (quizTaker && cand) {
+    cand.innerHTML = `<strong>${quizTaker.name}</strong> · ${quizTaker.designation} · Emp. Code ${quizTaker.code}`
+      + `<br>${new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' })}`;
+  }
 
   document.getElementById('quizScoreCircle').className = `quiz-score-circle ${passed ? 'pass' : 'fail'}`;
   document.getElementById('quizScoreNumber').textContent = `${pct}%`;
@@ -4885,6 +5113,16 @@ document.addEventListener('DOMContentLoaded', () => {
     table.parentNode.insertBefore(wrap, table);
     wrap.appendChild(table);
   });
+
+  // Pre-fill the quiz identity fields if a candidate is remembered on this device
+  if (quizTaker) {
+    const n = document.getElementById('quizName');
+    const d = document.getElementById('quizDesignation');
+    const c = document.getElementById('quizEmpCode');
+    if (n) n.value = quizTaker.name || '';
+    if (d) d.value = quizTaker.designation || '';
+    if (c) c.value = quizTaker.code || '';
+  }
 
   // Sync all progress UI
   updateProgressUI();
